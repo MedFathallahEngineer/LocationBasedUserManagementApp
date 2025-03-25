@@ -13,13 +13,21 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
       if (!name || !email || !latitude || !longitude) {
         return next(new ErrorResponse("All fields are required", 400));
       }
+      const existingUser = await User.findOne({ email });
+      
+      if (existingUser) {
+        return next(new ErrorResponse("Email already in use", 400));
+      }
   
       const user = new User({ name, email, latitude, longitude });
       await user.save();
   
       res.status(201).json({ success: true, data: user });
-    } catch (error) {
-      next(error); // Pass errors to the centralized error handler
+    } catch (error:any) {
+      if (error.code === 11000) {
+        return next(new ErrorResponse("Email already in use", 400));
+      }
+      next(error);
     }
   });
 

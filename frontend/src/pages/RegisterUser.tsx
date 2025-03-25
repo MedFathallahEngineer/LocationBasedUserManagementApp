@@ -8,14 +8,14 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { Button, TextField, Container, Typography, Alert } from '@mui/material';
 
-// Correction des icônes Leaflet
+
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
   iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
   shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
 });
 
-// Composant pour détecter les clics sur la carte et récupérer la localisation
+// Component for picking a location
 const MapPicker = ({ onLocationSelect }: { onLocationSelect: (lat: number, lng: number) => void }) => {
   useMapEvents({
     click: (e) => {
@@ -49,9 +49,8 @@ const RegisterUser = () => {
       setSuccess(true);
       setFormData({ name: '', email: '', latitude: 0, longitude: 0 });
       navigate('/');
-    } catch (err) {
-        console.error('Erreur lors de l\'ajout de l\'utilisateur:', err); // Ajoute ceci pour afficher l'erreur
-      setError('Échec de l\'ajout de l\'utilisateur. Veuillez réessayer.');
+    } catch (err: any) {
+      setError(err || 'Error while adding user. Please try again.');
     } finally {
       setLoading(false);
     }

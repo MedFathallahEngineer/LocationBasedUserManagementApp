@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+
+// Define the User interface
 interface User {
   _id: string;
   name: string;
@@ -9,15 +11,20 @@ interface User {
   longitude: number;
 }
 
+// Define the initial state for the users slice
 interface UserState {
   users: User[];
   loading: boolean;
   error: string | null;
 }
+
+
 interface ApiResponse {
     success: boolean;
     data: User[]; 
   }
+
+
 const initialState: UserState = {
   users: [],
   loading: false,
@@ -57,6 +64,7 @@ export const addUser = createAsyncThunk<User, Omit<User, '_id'>, { rejectValue: 
   }
 );
 
+// User slice to handle the users state
 const userSlice = createSlice({
   name: 'users',
   initialState,
@@ -69,11 +77,11 @@ const userSlice = createSlice({
       })
       .addCase(fetchUsers.fulfilled, (state, action: PayloadAction<User[]>) => {
         state.loading = false;
-        state.users = action.payload;
+        state.users = action.payload; // Store fetched users
       })
       .addCase(fetchUsers.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || 'Failed to fetch users';
+        state.error = action.payload || 'Failed to fetch users'; // Store error message
       })
       .addCase(addUser.pending, (state) => {
         state.loading = true;
@@ -82,9 +90,9 @@ const userSlice = createSlice({
       .addCase(addUser.fulfilled, (state, action: PayloadAction<User>) => {
         state.loading = false;
         if (Array.isArray(state.users)) {
-          state.users.push(action.payload);
+          state.users.push(action.payload); // Add new user to the state
         } else {
-          console.error('Erreur: state.users n\'est pas un tableau');
+          console.error('Erreur: state.users is not an array');
         }
       })
       .addCase(addUser.rejected, (state, action) => {

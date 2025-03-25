@@ -13,7 +13,7 @@ class ErrorResponse extends Error {
 
 const errorHandler = (err: ErrorResponse, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
-
+  
   res.status(err.statusCode || 500).json({
     success: false,
     message: err.message || "Internal Server Error",
